@@ -3,8 +3,9 @@ kind: Kustomization
 
 resources:
   - deployment.yaml
-  - serviceaccount.yaml
+  - rbac.yaml
+  - service.yaml
 
-# Provide common labels to all resources
+# Common labels applied to all resources
 commonLabels:
-  app: agent-template
+  app: k3s-troubleshooter

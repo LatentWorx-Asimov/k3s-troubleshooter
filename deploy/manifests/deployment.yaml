@@ -1,34 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: agent-template
+  name: k3s-troubleshooter
   labels:
-    app: agent-template
+    app: k3s-troubleshooter
     component: agent-worker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: agent-template
+      app: k3s-troubleshooter
   template:
     metadata:
       labels:
-        app: agent-template
+        app: k3s-troubleshooter
     spec:
-      serviceAccountName: agent-template-sa
+      serviceAccountName: k3s-troubleshooter-sa
       containers:
         - name: agent-worker
-          # REPLACE with your actual registry/image
-          image: ghcr.io/latentworx-asimov/agent-template:latest
+          image: ghcr.io/latentworx-asimov/k3s-troubleshooter:latest
           imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: inbox
           env:
-            - name: TEMPORAL_HOST_PORT
-              value: "temporal-frontend.temporal.svc.cluster.local:7233"
-            - name: POSTGRES_DSN
+            - name: LLM_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: agent-db-credentials
-                  key: dsn
+                  name: gemini-api-key
+                  key: api-key
+                  optional: true
+            - name: TEMPORAL_HOST_PORT
+              value: "temporal-frontend.temporal.svc.cluster.local:7233"
           resources:
             requests:
               cpu: "100m"

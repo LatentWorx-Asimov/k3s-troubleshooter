@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/LatentWorx-Asimov/agent-template/internal/agent"
+	"github.com/LatentWorx-Asimov/k3s-troubleshooter/internal/agent"
 )
 
 // A2AEnvelope defines the standard Agent-to-Agent messaging structure
@@ -46,9 +46,9 @@ func main() {
 	log.Println("Starting A2A Agent Webhook Listener...")
 
 	agentSpec := AgentSpec{
-		Name:                "template-agent",
-		Description:         "Template A2A agent acting as an autonomous employee.",
-		AllowedTools:        []string{"toolA", "toolB"},
+		Name:                "k3s-troubleshooter",
+		Description:         "Diagnoses k3s infrastructure, CrashLoopBackOffs, Ingress misconfigurations, and networking issues.",
+		AllowedTools:        []string{"kubectl_get_pods", "kubectl_describe", "kubectl_logs", "kubectl_get_events", "kubectl_get_services", "kubectl_get_ingress"},
 		PreferredModel:      "gemini-2.5-pro",
 		FallbackModel:       "gemini-2.5-flash",
 		ConfidenceThreshold: 0.8,

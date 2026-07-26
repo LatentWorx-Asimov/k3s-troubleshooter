@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-template
+  labels:
+    app: agent-template
+    component: agent-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent-template
+  template:
+    metadata:
+      labels:
+        app: agent-template
+    spec:
+      serviceAccountName: agent-template-sa
+      containers:
+        - name: agent-worker
+          # REPLACE with your actual registry/image
+          image: ghcr.io/latentworx-asimov/agent-template:latest
+          imagePullPolicy: Always
+          env:
+            - name: TEMPORAL_HOST_PORT
+              value: "temporal-frontend.temporal.svc.cluster.local:7233"
+            - name: POSTGRES_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: agent-db-credentials
+                  key: dsn
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
